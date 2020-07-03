@@ -6,11 +6,13 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-    </style>
 
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <!-- Type your color code which you want to set in colorPrimary item -->
+    </style>
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="colorPrimary">#03A9F4</item>
     </style>
 
 </resources>

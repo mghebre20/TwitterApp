@@ -1,6 +1,9 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Movie;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import org.parceler.Parcels;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 //this TweetsAdapter class extends super and parametized by viewholder created below
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>  {
@@ -71,16 +81,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     }
 
 
-
-
-
    // define a viewholder
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
 
         // introducing variables for our elements in xml file
        ImageView ivProfileImage;
-       TextView tvScreenName;
+       TextView tvUserName;
        TextView tvBody;
+       TextView tvTimeStamp;
+       TextView tvName;
+       ImageView ivTweetImage;
 
        //itemView is a representation of one row in Recycler view (a tweet)
        public ViewHolder(@NonNull View itemView) {
@@ -88,8 +99,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
            // defining my variables here
            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
-           tvScreenName = itemView.findViewById(R.id.tvScreenName);
+           tvUserName = itemView.findViewById(R.id.tvUserName);
            tvBody = itemView.findViewById(R.id.tvBody);
+           tvTimeStamp = itemView.findViewById(R.id.tvTimeStamp);
+           tvName = itemView.findViewById(R.id.tvName);
+           ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
+
+           itemView.setOnClickListener(this);
 
        }
         //method in ViewHolder class for onBindViewHolder
@@ -97,11 +113,56 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
        public void bind(Tweet tweet) {
 
            //bind variables to tweet
-           tvScreenName.setText(tweet.user.screenName);
+           tvUserName.setText("@" +tweet.user.userName);
             tvBody.setText(tweet.body);
+//           tvTimeStamp.setText(" · " +tweet.tvTimeStamp);
+           tvName.setText(tweet.user.name);
+
+           tvTimeStamp.setText(" · " + getRelativeTimeAgo(tweet.createdAt));
+
+
+                   //If there's an image 
+                   if(tweet.tweetImageUrls.size() > 0){
+                       //Set media 
+                       Glide.with(context).load(tweet.tweetImageUrls.get(0)).transform(new CenterCrop(), new RoundedCorners(30)).into(ivTweetImage);
+                   //Recovers visibility on a recycled item after it had been toggled off 
+                       ivTweetImage.setVisibility(View.VISIBLE);
+                   } else{
+                       //No image? Hide the view. 
+                       ivTweetImage.setVisibility(View.GONE);
+                   }
+
 
             //using glide to load in the image into our variable based on image url for user
            Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+       }
+
+       public String getRelativeTimeAgo(String rawJsonDate) {
+           String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+           SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+           sf.setLenient(true);
+           String relativeDate = "";
+           try {
+               long dateMillis = sf.parse(rawJsonDate).getTime();
+               relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+           } catch (ParseException e) {
+               e.printStackTrace();
+           }
+           return relativeDate;
+       }
+
+       @Override
+       public void onClick(View v) {
+           //we want the items position
+           int position = getAdapterPosition();
+           //if position is viewed
+           if(position != RecyclerView.NO_POSITION) {
+               Tweet tweet = tweets.get(position);
+               Intent intent = new Intent(context, DetailsActivity.class);
+               intent.putExtra(Movie.class.getSimpleName(), Parcels.wrap(tweet));
+               context.startActivity(intent);
+           }
+
        }
    }
 }
