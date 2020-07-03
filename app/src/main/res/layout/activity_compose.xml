@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#03A9F4"
     tools:context=".ComposeActivity">
 
     <EditText
@@ -28,6 +29,7 @@
         android:layout_marginRight="0dp"
         android:layout_toStartOf="@+id/btnTweet"
         android:maxLength="280"
+        android:textColor="#FFFFFF"
         app:exceededTextColor="#FF0000"
         app:maxCharacters="280" />
 
@@ -39,5 +41,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:text="@string/tweet" />
+        android:background="#2196F3"
+        android:text="@string/tweet"
+        android:textColor="#FFFFFF" />
 </RelativeLayout>

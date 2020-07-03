@@ -45,6 +45,10 @@ import okhttp3.Headers;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+          getSupportActionBar().setDisplayShowHomeEnabled(true);
+          getSupportActionBar().setLogo(R.drawable.ic_action_twitter_logo);
+          getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         client =  TwitterApplication.getRestClient(this);
 
 

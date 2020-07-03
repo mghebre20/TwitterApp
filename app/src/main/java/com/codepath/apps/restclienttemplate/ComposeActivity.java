@@ -42,6 +42,10 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_action_twitter_logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         // we want a reference to the client
         //pass in this, a reference to the ComposeActivity
         client = TwitterApplication.getRestClient(this);
